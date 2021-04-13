@@ -46,16 +46,17 @@ class _SafraState extends State<Safra> with SingleTickerProviderStateMixin {
                 if (isCollapsed == false) Navigator.pop(context);
               },
               child: sidebarMenu(context)),
-          menuPrincipal(context),
+          safra(context),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: isCollapsed? FloatingActionButton(
+        heroTag: "pop",
         backgroundColor: Colors.brown[600],
         child: Icon(Icons.arrow_back),
         onPressed: () {
           Navigator.pop(context);
         },
-      ),
+      ) : Container() ,
     );
   }
 
@@ -99,7 +100,7 @@ class _SafraState extends State<Safra> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget menuPrincipal(context) {
+  Widget safra(context) {
     return AnimatedPositioned(
       top: 0,
       bottom: 0,

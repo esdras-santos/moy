@@ -44,16 +44,17 @@ class _ManejoState extends State<Manejo> with SingleTickerProviderStateMixin {
                 if (isCollapsed == false) Navigator.pop(context);
               },
               child: sidebarMenu(context)),
-          menuPrincipal(context),
+          manejo(context),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: isCollapsed? FloatingActionButton(
+        heroTag: "pop",
         backgroundColor: Colors.brown[600],
         child: Icon(Icons.arrow_back),
         onPressed: () {
           Navigator.pop(context);
         },
-      ),
+      ) : Container() ,
     );
   }
 
@@ -97,7 +98,7 @@ class _ManejoState extends State<Manejo> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget menuPrincipal(context) {
+  Widget manejo(context) {
     return AnimatedPositioned(
       top: 0,
       bottom: 0,

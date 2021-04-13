@@ -17,8 +17,11 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
 
   bool abrirCarreta = false;
   int balaios = 0;
+  double sliderval = 0.0;
+  //a capacidade deve ser verificada no backend
+  int capacidade = 100;
 
-  //esses itens devem ser puxados do backend
+  //esses itens devem ser tirados do backend
   List<ListItem> _motoristasItens = [
     ListItem(0, "Selecione o motorista"),
     ListItem(1, "First Value"),
@@ -120,16 +123,19 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
                 if (isCollapsed == false) Navigator.pop(context);
               },
               child: sidebarMenu(context)),
-          menuPrincipal(context),
+          registrarBalaios(context),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.brown[600],
-        child: Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
+      floatingActionButton: isCollapsed
+          ? FloatingActionButton(
+              heroTag: "pop",
+              backgroundColor: Colors.brown[600],
+              child: Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          : Container(),
     );
   }
 
@@ -155,15 +161,15 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
             Column(
               children: [
                 Text(
-                  "Progresso",
+                  "Capacidade",
                   style: TextStyle(
                       color: Colors.brown,
-                      fontSize: 22,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  "0/100",
+                  "$balaios/$capacidade",
                   style: TextStyle(
                     color: Colors.brown,
                     fontSize: 18,
@@ -181,7 +187,7 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
           ],
         ),
         SizedBox(
-          height: 20,
+          height: 5,
         ),
         DropdownButton<ListItem>(
           value: _selectedTrabalhadorItem,
@@ -192,19 +198,19 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
             });
           },
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 10),
         Center(
           child: Text(
             "Balaios",
             style: TextStyle(
-                color: Colors.brown, fontSize: 22, fontWeight: FontWeight.bold),
+                color: Colors.brown, fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 10),
         Row(
           children: [
             SizedBox(
-              width: 90,
+              width: 80,
             ),
             balaios == 0
                 ? SizedBox(width: 40)
@@ -213,10 +219,15 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
                     width: 40,
                     child: FittedBox(
                       child: FloatingActionButton(
+                        heroTag: "less",
                         backgroundColor: Colors.brown,
-                        child: Text("-",
-                            style: TextStyle(
-                                fontSize: 50, fontWeight: FontWeight.bold)),
+                        child: Text(
+                          "-",
+                          style: TextStyle(
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                         onPressed: () {
                           setState(() {
                             balaios -= 1;
@@ -231,11 +242,12 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
               style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
             ),
             SizedBox(width: 40),
-            Container(
+            capacidade == balaios? SizedBox(width: 40): Container(
               height: 40,
               width: 40,
               child: FittedBox(
                 child: FloatingActionButton(
+                  heroTag: "plus",
                   backgroundColor: Colors.brown,
                   child: Text("+",
                       style:
@@ -248,12 +260,89 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
                 ),
               ),
             ),
-            TextFormField(
-            decoration: InputDecoration(
-              border: UnderlineInputBorder(),
-              labelText: 'Enter your username',),),
           ],
-        )
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Center(
+          child: Text(
+            "Preço",
+            style: TextStyle(
+                color: Colors.brown, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Text(
+          "R\$ ${sliderval.round()}",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        Slider(
+          activeColor: Colors.brown,
+          value: sliderval,
+          max: 40,
+          divisions: 40,
+          onChanged: (double value) {
+            setState(() {
+              sliderval = value;
+            });
+          },
+        ),
+        DropdownButton<ListItem>(
+          value: _selectedTalhaoItem,
+          items: _talhaoMenuItens,
+          onChanged: (value) {
+            setState(() {
+              _selectedTalhaoItem = value;
+            });
+          },
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        GestureDetector(
+          onTap: () {},
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey,
+                  offset: Offset(0.0, 4.0),
+                  blurRadius: 10.0,
+                ),
+              ],
+            ),
+            height: 40,
+            width: 160,
+            child: Container(
+              height: 100,
+              width: 140,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.brown[600],
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    "Imprimir",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -298,7 +387,7 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
     );
   }
 
-  Widget menuPrincipal(context) {
+  Widget registrarBalaios(context) {
     return AnimatedPositioned(
       top: 0,
       bottom: 0,
@@ -351,7 +440,7 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
               Material(
                 child: Column(
                   children: <Widget>[
@@ -364,7 +453,6 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
                         });
                       },
                     ),
-                    SizedBox(height: 10),
                     DropdownButton<ListItem>(
                       value: _selectedVeiculoItem,
                       items: _veiculosMenuItens,
@@ -374,7 +462,7 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
                         });
                       },
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 5),
                     Row(
                       children: [
                         SizedBox(width: 10),
@@ -397,7 +485,7 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
                                   ),
                                 ],
                               ),
-                              height: 50,
+                              height: 40,
                               width: 160,
                               child: Container(
                                 height: 100,
@@ -444,7 +532,7 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
                                   ),
                                 ],
                               ),
-                              height: 50,
+                              height: 40,
                               width: 160,
                               child: Container(
                                 height: 100,
@@ -479,11 +567,11 @@ class _RegistrarBalaiosState extends State<RegistrarBalaios>
                         SizedBox(width: 10),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    opcoesCarreta(context),
+                    SizedBox(height: 10),
                   ],
                 ),
               ),
+              abrirCarreta ? opcoesCarreta(context) : Container(),
             ],
           ),
         ),
